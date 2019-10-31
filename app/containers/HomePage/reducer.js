@@ -3,7 +3,7 @@ import * as types from './constants';
 
 // The initial state of the App
 export const initialState = {
-  value: 0,
+  value: '',
 };
 
 /* eslint-disable default-case, no-param-reassign */
