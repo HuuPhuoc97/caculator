@@ -10,52 +10,30 @@ import Calculator from './../../components/Calculator'
 
 const key = 'home';
 
-function HomePage({ number, onSetValue }) {
+function HomePage({ number, onSetValue, onGetResult, onClear, onDel, onAddExpression }) {
   useInjectReducer({ key, reducer });
 
-  var addExpresion = e => {
+  var addExpression = e => {
     if (Number.isInteger(number)) {
-      number = '';
+      // onSetValue('');
+      onClear();
     }
-    onSetValue(number + e);
+    onAddExpression(e);
   };
 
   const getResult = () => {
-    number = number.replace(/^0+/, '');
-    let operator = ['+', '-', '*', '/'];
-
-    //Remove redundant 0 in math expressions
-    for (let i = 0; i < number.length; i++) {
-      if (operator.indexOf(number[i]) !== -1) {
-        let j = i;
-        while (j < number.length && number[j + 1] === '0') {
-          j++;
-        }
-        const checkNumber = /^[1-9]/;
-        const resultCheck = checkNumber.test(number[j + 1]);
-        if (number[j] === '0' && !resultCheck) {
-          number = number.slice(0, i + 2) + number.slice(j + 1, number.length);
-        } else {
-          number = number.slice(0, i + 1) + number.slice(j + 1, number.length);
-        }
-      }
-    }
-
-    if (number.length === 0 || operator.indexOf(number[0]) !== -1)
-      number = ''.concat('0', number);
-
-    onSetValue(eval(number));
+    onGetResult();
   };
   const clear = () => {
-    onSetValue('');
+    onClear();
   };
   const del = () => {
-    onSetValue(number.toString(10).slice(0, -1));
+    onDel();
   };
   return (
     <Calculator
       number = {number}
-      addExpresion = {addExpresion}
+      addExpression = {addExpression}
       getResult = {getResult}
       del = {del}
       clear = {clear}
@@ -68,8 +46,11 @@ const mapStateToProps = createStructuredSelector({
 });
 export function mapDispatchToProps(dispatch) {
   return {
-    onGetResult: a => dispatch(actions.getResult(a)),
-    onSetValue: a => dispatch(actions.setValue(a)),
+    onGetResult: () => dispatch(actions.getResult()),
+    onClear: () => dispatch(actions.clear()),
+    onDel: () => dispatch(actions.del()),
+    onSetValue: value => dispatch(actions.setValue(value)),
+    onAddExpression: value => dispatch(actions.addExpression(value)),
   };
 }
 
