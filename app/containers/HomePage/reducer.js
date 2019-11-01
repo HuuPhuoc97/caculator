@@ -3,7 +3,7 @@ import * as types from './constants';
 
 // The initial state of the App
 export const initialState = {
-  value: '0',
+  value: '',
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -46,7 +46,7 @@ const homeReducer = (state = initialState, action) =>
         return { ...state, value: number };
 
       case types.CLEAR:
-        state.value = '0';
+        state.value = '';
         return { ...state };
 
       case types.DEL:
@@ -54,8 +54,6 @@ const homeReducer = (state = initialState, action) =>
         return { ...state };
 
       case types.ADD_EXPRESSION:
-        if(state.value === '0' )
-            state.value = '';
         state.value += action.value;
         return { ...state };
 
