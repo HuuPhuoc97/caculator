@@ -15,9 +15,6 @@ const homeReducer = (state = initialState, action) =>
         return { ...state };
       case types.SET_VALUE:
         state.value = action.value;
-        console.log('ok' + state.value);
-        console.log('ok12' + typeof state.value);
-
         return { ...state };
       default:
         return state;

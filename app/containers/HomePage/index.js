@@ -20,30 +20,64 @@ import * as actions from './action';
 const key = 'home';
 
 export function HomePage({ number, onGetResult, onSetValue }) {
-  
   useInjectReducer({ key, reducer });
 
   var addExpresion = e => {
-    if (Number.isInteger(number) ){
-      onSetValue('');
-      // onGetResult();
+    if (Number.isInteger(number)) {
+      number = '';
     }
     onSetValue(number + e);
   };
   const getResult = () => {
-    console.log(eval(number));
-    onSetValue(eval(number));
+    let str = number;
+
+    str = str.replace(/^0+/, '');
+
+    for (let i = 0; i < str.length; i++) {
+      if (
+        (str[i] === '+' ||
+          str[i] === '-' ||
+          str[i] === '*' ||
+          str[i] === '/') &&
+        str[i + 1] === '0'
+      ) {
+        let j = i;
+        while (j < str.length && str[j + 1] === '0') {
+          j++;
+        }
+        const checkNumber = /^[1-9]/;
+        const resultCheck = checkNumber.test(str[j + 1]);
+        if (str[j] === '0' && !resultCheck) {
+          str = str.slice(0, i + 2) + str.slice(j + 1, str.length);
+        } else {
+          str = str.slice(0, i + 1) + str.slice(j + 1, str.length);
+        }
+      }
+    }
+
+    if(str.length === 0 || str[0] === '+' ||
+    str[0] === '-' ||
+    str[0] === '*' ||
+    str[0] === '/') str = ''.concat('0',str);
+    console.log(str);
+    
+    onSetValue(eval(str));
   };
   const clear = () => {
     onSetValue('');
   };
   const del = () => {
-    onSetValue(number.slice(0, -1));
+    onSetValue(number.toString(10).slice(0, -1));
   };
   return (
     <div id="calculator">
       <div className="calculator-logs" />
-      <input type="string" className="calculator-input" value={number} onChange={addExpresion} />
+      <input
+        type="string"
+        className="calculator-input"
+        value={number}
+        onChange={addExpresion}
+      />
       <div className="calculator-row">
         <div className="calculator-col">
           <button className="calculator-btn gray action" onClick={clear}>
@@ -161,10 +195,10 @@ export function HomePage({ number, onGetResult, onSetValue }) {
             .
           </button>
         </div>
-      <div className="calculator-col">
-        <button className="calculator-btn accent action" onClick={getResult}>
-          = 
-        </button>
+        <div className="calculator-col">
+          <button className="calculator-btn accent action" onClick={getResult}>
+            =
+          </button>
         </div>
       </div>
     </div>
@@ -177,7 +211,7 @@ const mapStateToProps = createStructuredSelector({
 export function mapDispatchToProps(dispatch) {
   return {
     onGetResult: a => dispatch(actions.getResult(a)),
-    onSetValue: a => dispatch(actions.setValue(a))
+    onSetValue: a => dispatch(actions.setValue(a)),
   };
 }
 
