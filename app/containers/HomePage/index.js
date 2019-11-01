@@ -1,14 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-eval */
-/* eslint-disable no-var */
-/* eslint-disable react/button-has-type */
-/*
- * HomePage
- *
- * This is the first thing users see of our App, at the '/' route
- *
- */
-
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import './index.css';
@@ -17,9 +6,10 @@ import { createStructuredSelector } from 'reselect';
 import { makeSelectValue } from './selectors';
 import reducer from './reducer';
 import * as actions from './action';
+
 const key = 'home';
 
-export function HomePage({ number, onGetResult, onSetValue }) {
+export function HomePage({ number, onSetValue }) {
   useInjectReducer({ key, reducer });
 
   var addExpresion = e => {
@@ -28,40 +18,32 @@ export function HomePage({ number, onGetResult, onSetValue }) {
     }
     onSetValue(number + e);
   };
+
   const getResult = () => {
-    let str = number;
+    number = number.replace(/^0+/, '');
+    let operator = ['+', '-', '*', '/'];
 
-    str = str.replace(/^0+/, '');
-
-    for (let i = 0; i < str.length; i++) {
-      if (
-        (str[i] === '+' ||
-          str[i] === '-' ||
-          str[i] === '*' ||
-          str[i] === '/') &&
-        str[i + 1] === '0'
-      ) {
+    //Remove redundant 0 in math expressions
+    for (let i = 0; i < number.length; i++) {
+      if (operator.indexOf(number[i]) !== -1) {
         let j = i;
-        while (j < str.length && str[j + 1] === '0') {
+        while (j < number.length && number[j + 1] === '0') {
           j++;
         }
         const checkNumber = /^[1-9]/;
-        const resultCheck = checkNumber.test(str[j + 1]);
-        if (str[j] === '0' && !resultCheck) {
-          str = str.slice(0, i + 2) + str.slice(j + 1, str.length);
+        const resultCheck = checkNumber.test(number[j + 1]);
+        if (number[j] === '0' && !resultCheck) {
+          number = number.slice(0, i + 2) + number.slice(j + 1, number.length);
         } else {
-          str = str.slice(0, i + 1) + str.slice(j + 1, str.length);
+          number = number.slice(0, i + 1) + number.slice(j + 1, number.length);
         }
       }
     }
 
-    if(str.length === 0 || str[0] === '+' ||
-    str[0] === '-' ||
-    str[0] === '*' ||
-    str[0] === '/') str = ''.concat('0',str);
-    console.log(str);
-    
-    onSetValue(eval(str));
+    if (number.length === 0 || operator.indexOf(number[0]) !== -1)
+      number = ''.concat('0', number);
+
+    onSetValue(eval(number));
   };
   const clear = () => {
     onSetValue('');
