@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import './index.css';
+// import './index.css';
 import { useInjectReducer } from 'utils/injectReducer';
 import { createStructuredSelector } from 'reselect';
 import { makeSelectValue } from './selectors';
 import reducer from './reducer';
 import * as actions from './action';
+import Calculator from './../../components/Calculator'
 
 const key = 'home';
 
-export function HomePage({ number, onSetValue }) {
+function HomePage({ number, onSetValue }) {
   useInjectReducer({ key, reducer });
 
   var addExpresion = e => {
@@ -52,138 +53,13 @@ export function HomePage({ number, onSetValue }) {
     onSetValue(number.toString(10).slice(0, -1));
   };
   return (
-    <div id="calculator">
-      <div className="calculator-logs" />
-      <input
-        type="string"
-        className="calculator-input"
-        value={number}
-        onChange={addExpresion}
-      />
-      <div className="calculator-row">
-        <div className="calculator-col">
-          <button className="calculator-btn gray action" onClick={clear}>
-            C
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button className="calculator-btn gray action" onClick={del}>
-            del
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button
-            className="calculator-btn gray action"
-            onClick={() => addExpresion('%')}
-          >
-            %
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button
-            className="calculator-btn accent action"
-            onClick={() => addExpresion('/')}
-          >
-            /
-          </button>
-        </div>
-      </div>
-      <div className="calculator-row">
-        <div className="calculator-col">
-          <button className="calculator-btn" onClick={() => addExpresion('7')}>
-            7
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button className="calculator-btn" onClick={() => addExpresion('8')}>
-            8
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button className="calculator-btn" onClick={() => addExpresion('9')}>
-            9
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button
-            className="calculator-btn accent action"
-            onClick={() => addExpresion('*')}
-          >
-            *
-          </button>
-        </div>
-      </div>
-      <div className="calculator-row">
-        <div className="calculator-col">
-          <button className="calculator-btn" onClick={() => addExpresion('4')}>
-            4
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button className="calculator-btn" onClick={() => addExpresion('5')}>
-            5
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button className="calculator-btn" onClick={() => addExpresion('6')}>
-            6
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button
-            className="calculator-btn accent action"
-            onClick={() => addExpresion('-')}
-          >
-            -
-          </button>
-        </div>
-      </div>
-      <div className="calculator-row">
-        <div className="calculator-col">
-          <button className="calculator-btn" onClick={() => addExpresion('1')}>
-            1
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button className="calculator-btn" onClick={() => addExpresion('2')}>
-            2
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button className="calculator-btn" onClick={() => addExpresion('3')}>
-            3
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button
-            className="calculator-btn accent action"
-            onClick={() => addExpresion('+')}
-          >
-            +
-          </button>
-        </div>
-      </div>
-      <div className="calculator-row">
-        <div className="calculator-col wide">
-          <button className="calculator-btn" onClick={() => addExpresion('0')}>
-            0
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button
-            className="calculator-btn action"
-            onClick={() => addExpresion('.')}
-          >
-            .
-          </button>
-        </div>
-        <div className="calculator-col">
-          <button className="calculator-btn accent action" onClick={getResult}>
-            =
-          </button>
-        </div>
-      </div>
-    </div>
+    <Calculator
+      number = {number}
+      addExpresion = {addExpresion}
+      getResult = {getResult}
+      del = {del}
+      clear = {clear}
+    />
   );
 }
 
